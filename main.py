@@ -2,6 +2,9 @@ from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 import smtplib
 from email.message import EmailMessage
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI(title="IAAS Email Service")
 
