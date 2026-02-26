@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+
+# Entorno de Render
+.env
