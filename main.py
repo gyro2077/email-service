@@ -67,7 +67,9 @@ def enviar_correos_lote(nombre_cumpleanero: str, destinatarios: list, image_data
             smtp.send_message(msg)
             print(f"Lote enviado con éxito a {len(destinatarios)} destinatarios por el cumple de {nombre_cumpleanero}.")
     except Exception as e:
+        import traceback
         print(f"Error en envío de lote por {nombre_cumpleanero}: {str(e)}")
+        traceback.print_exc()
 
 def tarea_procesar_cumpleanos(datos_hoja: list):
     """Tarea asíncrona que extrae todos los correos, filtra cumpleañeros, llama a Java y manda los mails."""
@@ -86,6 +88,8 @@ def tarea_procesar_cumpleanos(datos_hoja: list):
         if not lista_destinatarios:
             print("No se encontraron correos en la base de datos para enviar el mensaje.")
             return
+
+        print(f"Correos totales extraídos para Bcc: {len(lista_destinatarios)}")
 
         # 2. Identificar el día actual en Ecuador
         tz_ec = pytz.timezone('America/Guayaquil')
@@ -151,7 +155,9 @@ def tarea_procesar_cumpleanos(datos_hoja: list):
                 respuesta_jasper.raise_for_status()
                 image_data = respuesta_jasper.content
             except Exception as e:
+                import traceback
                 print(f"Fallo al obtener la imagen de {nombre_mostrar} desde Jasper: {e}")
+                traceback.print_exc()
                 continue
             
             print(f"Imagen obtenida para {nombre_mostrar}. Repartiendo en lotes...")
@@ -163,7 +169,9 @@ def tarea_procesar_cumpleanos(datos_hoja: list):
                 enviar_correos_lote(nombre_mostrar, lote, image_data)
 
     except Exception as e:
+         import traceback
          print(f"Falla general en la tarea de procesamiento: {e}")
+         traceback.print_exc()
 
 
 @app.post("/procesar-cumpleanos-diario")
